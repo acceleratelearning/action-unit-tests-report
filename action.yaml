@@ -1,0 +1,13 @@
+name: Unit Tests Report
+description: Determine the next container image tag
+inputs:
+  path:
+    description: Path to look for TestResults.xml files
+    required: false
+    default: ''
+runs:
+  using: composite
+  steps:
+    - name: Unit Tests Report
+      shell: pwsh
+      run: ${{ github.action_path }}/action.ps1 -Path '${{ inputs.path }}'
