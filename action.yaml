@@ -9,4 +9,5 @@ runs:
   using: composite
   steps:
     - name: Unit Tests Report
+      shell: pwsh
       run: ${{ github.action_path }}/action.ps1 -Path '${{ inputs.path }}'
