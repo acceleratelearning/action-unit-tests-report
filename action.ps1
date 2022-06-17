@@ -19,18 +19,21 @@ if (-Not $test_results_file) {
 $markdown = @()
 if ($test_results.testsuites.failures -gt 0) {
     $markdown += "# Failed tests"
-    $markdown += "$($test_results.testsuites.failures) / $($test_results.testsuites.tests) tests failed"
-    # $markdown += ""
-    # $markdown += "## Failing Tests"
+    $markdown += "$($test_results.testsuites.failures) / $($test_results.testsuites.tests) tests failed."
+
     $markdown += "| Test Name | Message | Detail |"
     $markdown += "|------|---------|--------|"
 
     $test_results.testsuites.testsuite.testcase  | Where-Object { $_.error } | ForEach-Object {
-        $markdown += "| $($_.name) | $($_.error.message.replace('|','\|')) | $($_.error.InnerText.replace('|','\|')) |"
+        $message = $_.error.message.replace('|', '\|')
+        $detail = $_.error.InnerText.replace('|', '\|').trim().replace("`n", "</br>")
+        $markdown += "| $($_.name) | $message | $detail |"
     }
-    $markdown += ""
 
     $markdown | Add-Content $env:GITHUB_STEP_SUMMARY
+
+    Write-Host "::error title=Unit Test Failures::$($test_results.testsuites.failures) / $($test_results.testsuites.tests) tests failed."
+    exit 1
 }
 
 
