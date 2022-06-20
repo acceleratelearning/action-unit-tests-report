@@ -8,9 +8,9 @@ if (-Not $Path) {
     $Path = Get-Location
 }
 
-$test_results_file = Get-ChildItem -Path $Path -Filter TestResults.xml -Recurse | ForEach-Object { $_.FullName } | Select-Object -First 1
+$test_results_file = (@(Get-ChildItem -Path $Path -Filter TestResults.xml -Recurse) + @(Get-ChildItem -Path $Path -Filter junit.xml -Recurse)) | ForEach-Object { $_.FullName } | Select-Object -First 1
 if (-Not $test_results_file) {
-    Write-Warning "No TestResults.xml file found in $Path"
+    Write-Warning "No test results file found in $Path"
     exit 0
 }
 
